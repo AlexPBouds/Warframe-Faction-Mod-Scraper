@@ -6,6 +6,19 @@ fetches the current order books and recent completed-sale statistics for that
 syndicate's tradable offerings, then sorts them by realistic selling opportunity
 by default. Every column can be re-sorted.
 
+[![Latest release](https://img.shields.io/github/v/release/AlexPBouds/Warframe-Faction-Mod-Scraper?label=Download&sort=semver)](https://github.com/AlexPBouds/Warframe-Faction-Mod-Scraper/releases/latest)
+
+## Download (Windows)
+
+1. Open the [latest release](https://github.com/AlexPBouds/Warframe-Faction-Mod-Scraper/releases/latest).
+2. Download `Warframe-Faction-Mod-Scraper-vX.Y.Z.exe`.
+3. Double-click it. No Python installation is needed.
+
+The executable is unsigned, so Windows SmartScreen may show "Windows protected
+your PC". Click **More info**, then **Run anyway** to start it.
+
+Prefer to run from source? See [Quick start (Windows, from source)](#quick-start-windows-from-source).
+
 ## What it shows
 
 - Every tradable mod and arcane sold by the selected syndicate.
@@ -85,9 +98,9 @@ These additional syndicates add arcanes and other tradable mods:
 The app only shows offerings that are present in the Warframe.market tradable
 item catalog, so untradable blueprints and services are skipped.
 
-## Quick start (Windows)
+## Quick start (Windows, from source)
 
-Double-click `run.bat`.
+Prefer not to use the prebuilt executable? Double-click `run.bat`.
 
 The first run creates a `.venv` folder, installs the dependencies and then opens
 the app. Later runs just launch it. Python 3.10 or newer is required.
@@ -102,6 +115,30 @@ python -m venv .venv
 
 On macOS/Linux, use the equivalent `python` commands; only `run.bat` is
 Windows-specific.
+
+## Build the executable
+
+To build the same single-file Windows executable locally:
+
+```powershell
+.\build.ps1
+```
+
+The output is `dist\Warframe-Faction-Mod-Scraper.exe`. Python 3.10 or newer is
+required.
+
+Releases are built automatically by
+`.github/workflows/release.yml` whenever a tag starting with `v` is pushed. To
+publish a new version:
+
+```powershell
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+The workflow attaches the executable to a new GitHub release. You can also run
+the workflow manually from the **Actions** tab to produce a downloadable test
+artifact.
 
 ## How to use it
 
