@@ -14,7 +14,7 @@ API_V2 = "https://api.warframe.market/v2/"
 API_V1 = "https://api.warframe.market/v1/"
 
 USER_AGENT = (
-    "WarframeSyndicateMarketScraper/1.0 "
+    "PlatScout/1.0 "
     "(desktop market-analysis tool; public Warframe.market API client)"
 )
 ITEM_CACHE_SECONDS = 6 * 60 * 60
@@ -31,9 +31,9 @@ class WFMApiError(RuntimeError):
 def default_cache_dir() -> Path:
     base = os.getenv("LOCALAPPDATA")
     if base:
-        path = Path(base) / "WarframeSyndicateMarketScraper" / "cache"
+        path = Path(base) / "PlatScout" / "cache"
     else:
-        path = Path.home() / ".cache" / "warframe_syndicate_market_scraper"
+        path = Path.home() / ".cache" / "plat_scout"
 
     try:
         path.mkdir(parents=True, exist_ok=True)

@@ -12,9 +12,9 @@ PREFERENCES_FILENAME = "ui_preferences.json"
 def default_preferences_path() -> Path:
     base = os.getenv("LOCALAPPDATA")
     if base:
-        folder = Path(base) / "WarframeSyndicateMarketScraper"
+        folder = Path(base) / "PlatScout"
     else:
-        folder = Path.home() / ".config" / "warframe_syndicate_market_scraper"
+        folder = Path.home() / ".config" / "plat_scout"
     return folder / PREFERENCES_FILENAME
 
 

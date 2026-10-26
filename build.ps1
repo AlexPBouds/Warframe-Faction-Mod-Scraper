@@ -1,4 +1,4 @@
-$ErrorActionPreference = "Stop"
+$ErrorActionPreference = "Continue"
 Set-Location -LiteralPath $PSScriptRoot
 
 $python = ".\.venv\Scripts\python.exe"
@@ -20,7 +20,7 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 & $python -m PyInstaller --noconfirm --clean --onefile --windowed `
-    --name "Warframe-Faction-Mod-Scraper" `
+    --name "Plat-Scout" `
     --collect-all customtkinter `
     --collect-data matplotlib `
     app.py
@@ -28,4 +28,4 @@ if ($LASTEXITCODE -ne 0) {
     throw "Build failed."
 }
 
-Write-Host "Built dist\Warframe-Faction-Mod-Scraper.exe"
+Write-Host "Built dist\Plat-Scout.exe"

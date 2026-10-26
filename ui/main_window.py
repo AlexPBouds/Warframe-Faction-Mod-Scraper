@@ -184,14 +184,14 @@ def signed_price_text(value: float | None) -> str:
     return f"{float(value):+.1f}p"
 
 
-class MarketApp(ctk.CTk):
+class PlatScoutApp(ctk.CTk):
     def __init__(self) -> None:
         super().__init__()
 
         ctk.set_appearance_mode("dark")
         ctk.set_default_color_theme("blue")
 
-        self.title("Warframe Syndicate Market Scraper")
+        self.title("Plat Scout")
         self.configure(fg_color=BG)
         self._configure_window_size()
 
@@ -293,7 +293,7 @@ class MarketApp(ctk.CTk):
 
         ctk.CTkLabel(
             title_frame,
-            text="WARFRAME SYNDICATE MARKET SCRAPER",
+            text="PLAT SCOUT",
             font=("Segoe UI", 20, "bold"),
             text_color=TEXT,
         ).pack(anchor="w")

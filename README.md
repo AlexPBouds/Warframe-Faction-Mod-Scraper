@@ -1,7 +1,7 @@
-# Warframe Syndicate Market Scraper
+# Plat Scout
 
-A small desktop app for finding the best **syndicate mods and arcanes to sell**
-on [Warframe.market](https://warframe.market). Pick a syndicate, and the app
+Plat Scout is a small desktop app for finding the best **syndicate mods and
+arcanes to sell** on [Warframe.market](https://warframe.market). Pick a syndicate, and the app
 fetches the current order books and recent completed-sale statistics for that
 syndicate's tradable offerings, then sorts them by realistic selling opportunity
 by default. Every column can be re-sorted.
@@ -11,7 +11,7 @@ by default. Every column can be re-sorted.
 ## Download (Windows)
 
 1. Open the [latest release](https://github.com/AlexPBouds/Warframe-Faction-Mod-Scraper/releases/latest).
-2. Download `Warframe-Faction-Mod-Scraper-vX.Y.Z.exe`.
+2. Download `Plat-Scout-vX.Y.Z.exe`.
 3. Double-click it. No Python installation is needed.
 
 The executable is unsigned, so Windows SmartScreen may show "Windows protected
@@ -124,8 +124,7 @@ To build the same single-file Windows executable locally:
 .\build.ps1
 ```
 
-The output is `dist\Warframe-Faction-Mod-Scraper.exe`. Python 3.10 or newer is
-required.
+The output is `dist\Plat-Scout.exe`. Python 3.10 or newer is required.
 
 Releases are built automatically by
 `.github/workflows/release.yml` whenever a tag starting with `v` is pushed. To
@@ -232,7 +231,7 @@ The client:
 - stays below the public 3 requests/second limit (it uses 2.8/second);
 - retries rate-limit and temporary server errors with backoff;
 - caches the item catalog for six hours in
-  `%LOCALAPPDATA%\WarframeSyndicateMarketScraper\cache`;
+  `%LOCALAPPDATA%\PlatScout\cache`;
 - requests only the selected syndicate's offerings, not every listing on the
   site;
 - keeps the fetched order and statistics payloads in memory so rank and view

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import ctypes
 
-from ui.main_window import MarketApp
+from ui.main_window import PlatScoutApp
 
 
 def main() -> None:
@@ -11,7 +11,7 @@ def main() -> None:
     except Exception:
         pass
 
-    app = MarketApp()
+    app = PlatScoutApp()
     app.mainloop()
 
 
