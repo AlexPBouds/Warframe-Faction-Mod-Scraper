@@ -80,9 +80,11 @@ class WFMarketClient:
         requests_per_second: float = 2.8,
         timeout: float = 25.0,
         limiter: RateLimiter | None = None,
+        crossplay: bool = True,
     ) -> None:
         self.platform = platform.lower()
         self.language = language.lower()
+        self.crossplay = bool(crossplay)
         self.cache_dir = cache_dir or default_cache_dir()
         self.timeout = timeout
         self.notes: list[str] = []
@@ -92,14 +94,15 @@ class WFMarketClient:
             else RateLimiter(requests_per_second)
         )
         self._session = requests.Session()
-        self._session.headers.update(
-            {
-                "Accept": "application/json",
-                "User-Agent": USER_AGENT,
-                "Language": self.language,
-                "Platform": self.platform,
-            }
-        )
+        headers = {
+            "Accept": "application/json",
+            "User-Agent": USER_AGENT,
+            "Language": self.language,
+            "Platform": self.platform,
+        }
+        if self.crossplay:
+            headers["Crossplay"] = "true"
+        self._session.headers.update(headers)
 
     def close(self) -> None:
         self._session.close()

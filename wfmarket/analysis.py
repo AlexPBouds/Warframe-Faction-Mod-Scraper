@@ -56,6 +56,7 @@ class ModAnalysis:
     tags: tuple[str, ...]
 
     sellers: list[SellerOffer] = field(default_factory=list)
+    all_sellers: list[SellerOffer] = field(default_factory=list)
     online_seller_count: int = 0
     best_buy: int | None = None
     buy_order_count: int = 0
@@ -126,7 +127,8 @@ def analyze_mod(
         orders, target_rank, only_ingame, include_cheaper_ranked
     )
     analysis.online_seller_count = len(unique_sellers)
-    analysis.sellers = unique_sellers[:3]
+    analysis.all_sellers = list(unique_sellers)
+    analysis.sellers = unique_sellers  # Show all sellers
     analysis.best_buy = best_buy
     analysis.buy_order_count = buy_count
 

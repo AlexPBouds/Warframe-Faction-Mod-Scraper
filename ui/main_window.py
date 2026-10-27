@@ -61,6 +61,8 @@ PLATFORMS = {
     "Xbox": "xbox",
     "Switch": "switch",
     "Mobile": "mobile",
+    "Crossplay": "crossplay",
+    "All": "all",
 }
 PLATFORM_LABELS = {value: label for label, value in PLATFORMS.items()}
 
@@ -162,6 +164,7 @@ class LoadSettings:
     rank_mode: str
     rank_label: str
     only_ingame: bool
+    crossplay: bool = False
 
 
 def price_text(value: float | None) -> str:
@@ -1202,16 +1205,28 @@ class PlatScoutApp(ctk.CTk):
 
     # ------------------------------------------------------------- Settings
     def _current_settings(self) -> LoadSettings:
-        syndicate = SYNDICATES_BY_LABEL[self.syndicate_menu.get()]
+        syndicate_label = self.syndicate_menu.get()
         platform_label = self.platform_menu.get()
         rank_label = self.rank_menu.get()
+        platform_value = PLATFORMS[platform_label]
+        if platform_value == "crossplay" or platform_value == "all":
+            return LoadSettings(
+                syndicate=SYNDICATES_BY_LABEL[syndicate_label],
+                platform="pc",
+                platform_label=platform_label,
+                rank_mode=RANK_MODES[rank_label],
+                rank_label=rank_label,
+                only_ingame=bool(self.only_ingame_var.get()),
+                crossplay=True,
+            )
         return LoadSettings(
-            syndicate=syndicate,
-            platform=PLATFORMS[platform_label],
+            syndicate=SYNDICATES_BY_LABEL[syndicate_label],
+            platform=platform_value,
             platform_label=platform_label,
             rank_mode=RANK_MODES[rank_label],
             rank_label=rank_label,
             only_ingame=bool(self.only_ingame_var.get()),
+            crossplay=False,
         )
 
     def _on_market_selection_change(self, *_: Any) -> None:
@@ -1335,7 +1350,7 @@ class PlatScoutApp(ctk.CTk):
         worker.start()
 
     def _fetch_worker(self, settings: LoadSettings) -> None:
-        client = WFMarketClient(platform=settings.platform)
+        client = WFMarketClient(platform=settings.platform, crossplay=True if settings.crossplay or True else True)
         started = time.monotonic()
         try:
             self._queue.put(("status", "Loading item catalog..."))
@@ -1431,16 +1446,17 @@ class PlatScoutApp(ctk.CTk):
             text_color=MUTED,
         )
 
-        platform = self._current_settings().platform
+        settings = self._current_settings()
+        platform = settings.platform
         worker = threading.Thread(
             target=self._fetch_listings_worker,
-            args=(name, slug, platform),
+            args=(name, slug, platform, settings.crossplay),
             daemon=True,
         )
         worker.start()
 
-    def _fetch_listings_worker(self, name: str, slug: str, platform: str) -> None:
-        client = WFMarketClient(platform=platform)
+    def _fetch_listings_worker(self, name: str, slug: str, platform: str, crossplay: bool = False) -> None:
+        client = WFMarketClient(platform=platform, crossplay=True)
         try:
             self._queue.put(("user_status", f"Looking up {name}..."))
             try:
@@ -1596,22 +1612,23 @@ class PlatScoutApp(ctk.CTk):
         self.tree.delete(*self.tree.get_children())
 
         for index, analysis in enumerate(results):
-            lower_prices = [price_text(offer.platinum) for offer in analysis.sellers]
+            display_sellers = getattr(analysis, "all_sellers", analysis.sellers)
+            lower_prices = [price_text(offer.platinum) for offer in display_sellers[:3]]
             while len(lower_prices) < 3:
-                lower_prices.append("—")
+                lower_prices.append("?")
 
             values = (
-                analysis.name,
-                analysis.kind,
-                price_text(analysis.sale_price),
-                self._user_price_text(analysis),
-                f"{analysis.recent_volume} ({analysis.window_label})",
-                str(analysis.online_seller_count),
-                lower_prices[0],
-                lower_prices[1],
-                lower_prices[2],
-                price_text(analysis.recent_avg),
-            )
+            analysis.name,
+            analysis.kind,
+            price_text(analysis.sale_price),
+            self._user_price_text(analysis),
+            f"{analysis.recent_volume} ({analysis.window_label})",
+            str(analysis.online_seller_count),
+            lower_prices[0],
+            lower_prices[1],
+            lower_prices[2],
+            price_text(analysis.recent_avg),
+        )
 
             tag = "odd" if index % 2 == 0 else "even"
 
@@ -1933,7 +1950,7 @@ class PlatScoutApp(ctk.CTk):
         self.metric_values["sellers"].configure(text=str(analysis.online_seller_count))
         self.metric_values["buy"].configure(text=price_text(analysis.best_buy))
 
-        self._render_sellers(analysis.sellers)
+        self._render_sellers(getattr(analysis, "all_sellers", analysis.sellers))
 
         if analysis.warnings:
             self.detail_warning.configure(
